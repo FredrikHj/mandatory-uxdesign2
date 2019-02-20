@@ -2,6 +2,7 @@
 import controller from './controller.js';
 
 let getQuizPlayed = document.querySelector('#quizPlayed');
+
 function countQuizTurns (countQuizTurns) {
   countQuizTurns += 1;
   getQuizPlayed.textContent = 'Quiz ' + countQuizTurns;
@@ -32,8 +33,6 @@ function renderQuizContainerQuestion (tabIndexNrQuestionGroup, insurtQuestionStr
   createdQuizQuestionPlace.tabIndex = tabIndexNrQuestionGroup;
   createdQuizQuestionPlace.textContent = controller.htmlDecode(insurtQuestionStr);
 
-  // createdAnswerAltForm = document.createElement('form');
-  // createdAnswerAltForm.setAttribute('class', 'quizForm' + countQuizGroupForm);
 
   createdQuizContainerGroup.appendChild(createdQuizQuestionPlace);
   //createdQuizContainer.appendChild(createdAnswerAltForm);
@@ -56,7 +55,8 @@ function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, co
   The span for the answedering alternative are named "quizAnswerAlt". */
 
   let createdAnswerAltContainer = document.createElement('div');
-  let createdAnswerAltBtn = document.createElement('input');
+  createdAnswerAltContainer.setAttribute('class', 'quizAnswerAlt');
+  let createdAnswerAltBtn = document.createElement('input'); // Must ha tabindex for rowking
   createdAnswerAltBtn.tabIndex = tabIndexNrQuestionGroupAlt;
   createdAnswerAltBtn.setAttribute('type', 'radio');
   createdAnswerAltBtn.setAttribute('name', 'radioBtn' + countQuizQuestionGroup);
@@ -66,10 +66,9 @@ function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, co
 
   let getSpanAnsweringAltLabel = document.createElement('span');
   let getAnsweringAltLabel = document.createElement('label');
-  getAnsweringAltLabel.tabIndex = tabIndexNrQuestionGroupAlt;
 
   getAnsweringAltLabel.setAttribute('for', 'radioBtn' + countQuizQuestionGroup + '_' + countRadioBtnNr);
-  getAnsweringAltLabel.setAttribute('class', 'quizAnswerAlt');
+  //getAnsweringAltLabel.setAttribute('class', 'quizAnswerAlt');
 
   getSpanAnsweringAltLabel.textContent = controller.htmlDecode(insurtAnswerAltstr);
 

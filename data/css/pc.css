@@ -1,0 +1,227 @@
+@media screen and (min-width: 421px){
+  body{
+    max-width: 64%;
+    min-width: 77%;
+    max-height: 600px;
+    margin-left: calc(50% - 32%);
+    box-shadow: 0px 0px 7000px 15px black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 55px;
+  }
+  header{
+    margin-top: -3px;
+    height: 62px;
+    background-color: darkblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+  }
+  #headerContainer{
+    position: relative;
+    top: -3px;
+  }
+  #quizSideMenueBtn{
+    position: absolute;
+    top: 3px;
+    left: 50px;
+    background-color: darkblue;
+    border: none;
+  }
+  #quizSideMenueImg{
+    position: relative;
+    top: 11px;
+    left: -32px;
+    width: 34px;
+  }
+  #quizHeadLine{
+    position: absolute;
+    left: 56px;
+    top: 14px;
+    width: 283px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 5px;
+    color: white;
+  }
+  main{
+    height: 539px;
+    background-color: orange;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+  }
+  #loadContent{
+    position: relative;
+    display: block;
+    top: -11px;
+    left: 28px;
+    width: 85%;
+    height: 75%;
+    background-color: white;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  #runQuizBtn{
+    position: relative;
+    top: 250px;
+    left: 225px;
+  }
+  #quizPage{
+    width: 100%;
+    height: 100%;
+    /* overflow-y: scroll;
+    overflow-x: hidden; */
+  }
+  #quizPlayed{
+    margin-left: 29px;
+    margin-top: 20px;
+    margin-bottom: 17px;
+    font-size: 17px;
+    font-size: 32px;
+    font-weight: bold;
+  }
+  /* Quiz Master - Rendering from JS */
+  .quizContainer{
+    margin-top: 10px;
+    margin-left: 15px;
+    width: 100%;
+  }
+  .quizQuestion{
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+  }
+  .radioBtnStyle{
+    margin-left: 10px;
+  }
+  .quizLabelAnswerAlt{
+    margin-left: 10px;
+  }
+  .groupLine{
+    margin-top: 25px;
+    margin-left: calc(50% - 37.5%);
+    margin-bottom: 20px;
+    width: 75%;
+    height: 2px;
+    background-color: black;
+  }
+  .quizAnswerAlt{
+    margin: 10px
+  }
+  #submitQuiz{
+    position: relative;
+    width: 75px;
+    top: 10px;
+    bottom: 26px;
+    left: calc(50% - 50px);
+    margin-bottom: 15px;
+  }
+  /* Modal popup ---------------------------------------- -*/
+  #resultModal{
+    position: relative;
+    top: calc(-50% - 75px);
+    left: calc(50% - 175px);
+    height: 150px;
+    width: 350px;
+    border: 2px solid lightgrey;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 9px 10px 712px 222px grey;
+    display: none;
+  }
+  #modalHeadLine{
+    margin-top: 40px;
+    margin-left: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  #insurtQuizResult{
+    margin-left: 10px;
+    width: 100%;
+  }
+  #modalBtn{
+    display: flex;
+    justify-content: space-around;
+  }
+  #modalBtn button{
+    background: none;
+    border: none;
+  }
+  /* Sidemenue ---------------------------------------------*/
+  #drawerMenuFrame{
+    position: relative;
+    top: 0px;
+    left: 0px;
+    display: none;
+    width: 250px;
+    height: 601px;
+    background-color: white;
+    border-radius: 50px;
+    z-index: 1;
+  }
+  #drawerMenuContainer{
+    position: relative;
+    top: 100px;
+    left: 20px;
+  }
+  #drawerMenuHeadline{
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 3px;
+  }
+  #drawerMenuFrame hr{
+    width: 75%;
+    margin-left: 0px;
+    margin-top: 30px;
+    margin-bottom: 20px
+  }
+  #drawerMenuFrame div{
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .drawerMenuCircle{
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 20px;
+  }
+  .drawerMenuBtn{
+    position: relative;
+    top: -26px;
+    background: none;
+    border: none;
+  }
+  .drawerMenutext{
+    position: relative;
+  }
+  /* Stats page ------------------------------------------ */
+  #statsBox{
+    position: relative;
+    top: 25px;
+    left: 22px;
+    display: none;
+  }
+  .container__text{
+    font-size: 17px;
+    font-weight: bold;
+
+  }
+  .container__nr{
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: -17px;
+  }
+  /* About page ------------------------------------------ */
+  #abotPage{
+    display: none;
+    margin-left: 10px;
+    overflow-y: scroll;
+  }
+}

@@ -4,6 +4,7 @@ var controller = (function () {
   // ----------------------- Redering the views ----------------------------------
 
   let getQuizPlayed = document.querySelector('#quizPlayed');
+
   function countQuizTurns (countQuizTurns) {
     countQuizTurns += 1;
     getQuizPlayed.textContent = 'Quiz ' + countQuizTurns;
@@ -34,8 +35,6 @@ var controller = (function () {
     createdQuizQuestionPlace.tabIndex = tabIndexNrQuestionGroup;
     createdQuizQuestionPlace.textContent = controller.htmlDecode(insurtQuestionStr);
 
-    // createdAnswerAltForm = document.createElement('form');
-    // createdAnswerAltForm.setAttribute('class', 'quizForm' + countQuizGroupForm);
 
     createdQuizContainerGroup.appendChild(createdQuizQuestionPlace);
     //createdQuizContainer.appendChild(createdAnswerAltForm);
@@ -58,7 +57,8 @@ var controller = (function () {
     The span for the answedering alternative are named "quizAnswerAlt". */
 
     let createdAnswerAltContainer = document.createElement('div');
-    let createdAnswerAltBtn = document.createElement('input');
+    createdAnswerAltContainer.setAttribute('class', 'quizAnswerAlt');
+    let createdAnswerAltBtn = document.createElement('input'); // Must ha tabindex for rowking
     createdAnswerAltBtn.tabIndex = tabIndexNrQuestionGroupAlt;
     createdAnswerAltBtn.setAttribute('type', 'radio');
     createdAnswerAltBtn.setAttribute('name', 'radioBtn' + countQuizQuestionGroup);
@@ -68,10 +68,9 @@ var controller = (function () {
 
     let getSpanAnsweringAltLabel = document.createElement('span');
     let getAnsweringAltLabel = document.createElement('label');
-    getAnsweringAltLabel.tabIndex = tabIndexNrQuestionGroupAlt;
 
     getAnsweringAltLabel.setAttribute('for', 'radioBtn' + countQuizQuestionGroup + '_' + countRadioBtnNr);
-    getAnsweringAltLabel.setAttribute('class', 'quizAnswerAlt');
+    //getAnsweringAltLabel.setAttribute('class', 'quizAnswerAlt');
 
     getSpanAnsweringAltLabel.textContent = controller.htmlDecode(insurtAnswerAltstr);
 
@@ -139,7 +138,12 @@ var controller = (function () {
   // ----------------------- The modells -----------------------
   var modell = {
     /* Handels the incomming data from the API, individualy ----
-       Först the questions */
+       1 - The questions
+       2 - The answering alternatives
+       3 - The the correct answer
+       4 - Your answer
+
+       3 and 4 is comparing with eatch others and at last */
     quizQuestion: [],
     addQuizQuestion: function (savedQuizData) {
       this.quizQuestion.push({ savedQuizData: savedQuizData });
@@ -147,15 +151,15 @@ var controller = (function () {
     quizQuestionAnswerAlt: [],
     addQuizQuestionAnswerAlt: function (quizAnswerAltGroupArr) {
       this.quizQuestionAnswerAlt.push({ quizAnswerAltGroupArr: quizAnswerAltGroupArr });
-    },
-    yourAnswer: [],
-    addYourAnswer: function (yourAnswered) {
-      this.yourAnswer.push({ yourAnswered: yourAnswered });
-    },
-    questionCorrectAnswer: [],
-    addQuestionCorrectAnswer: function (saveCorrectAnswer) {
-      this.questionCorrectAnswer.push({ saveCorrectAnswer: saveCorrectAnswer });
     }
+    // questionCorrectAnswer: [],
+    //   addQuestionCorrectAnswer: function (saveCorrectAnswer) {
+    //     this.questionCorrectAnswer.push({ saveCorrectAnswer: saveCorrectAnswer });
+    // },
+    // yourAnswer: [],
+    // addYourAnswer: function (yourAnswered) {
+    //   this.yourAnswer.push({ yourAnswered: yourAnswered });
+    //}
   };
 
   // ----------------------- The core of the whole Quiz Webbsite -----------------------
@@ -167,10 +171,10 @@ var controller = (function () {
   let countQuizTurns$1 = 0;
   let countQuizQuestionGroup = 0;
 
-  document.querySelector("#quizPage").addEventListener("submit", (event) => event.preventDefault());
 
   //let insurtQuizQuestionAnswerAlt = [];
   let quizAnswerAltGroupArr, getAnswerAltFromArr, getAnswerAltstr, getQuestion;
+
   // Decode the strings chowinf correct text
   function htmlDecode (input) {
     let textStrTohtml = new DOMParser().parseFromString(input, "text/html");
@@ -178,9 +182,9 @@ var controller = (function () {
   }
   // Sending a headline string into the function
   view.loadQuizHeadLine('Quiz Master');
-  console.log(KeyboardEvent.key);
 
 
+  // Showing the side menue and handle the buttons inside it
   drawerMenu();
   function drawerMenu () {
     let getDrawerMenuFrame = document.querySelector('#drawerMenuFrame');
@@ -190,12 +194,15 @@ var controller = (function () {
       getTargetBtn.addEventListener('click', function (e) {
         let targetText = e.target.textContent;
         document.querySelector('#drawerMenuFrame').setAttribute('style', 'display: block');
+        view.getQuizPage.setAttribute('style', 'display: none');
+        document.querySelector('#drawerMenuHeadline').focus();
 
         if (targetText === 'Game screen') {
           view.loadQuizHeadLine('Quiz Master');
           getDrawerMenuFrame.setAttribute('style', 'display: none');
           document.querySelector('#statsBox').setAttribute('style', 'display: none');
-                  document.querySelector('#abotPage').setAttribute('style', 'display: none');
+          document.querySelector('#abotPage').setAttribute('style', 'display: none');
+          view.getQuizPlayed.style.color = 'black';
           view.getQuizPage.setAttribute('style', 'display: block');
 
         }
@@ -260,23 +267,23 @@ var controller = (function () {
       /* A counter is created which count for both the question groups and
       the answering group. The counters which is part of the question are defined above and increase by one inside every round turn.
       I define a tabindex nr for the question starting at 10 and every 10 after it. */
-
       countQuizQuestionGroup += 1;
       let tabIndexNrQuestionGroup = countQuizQuestionGroup + '0';
 
       /* The data received from the modell and insurted into the view for rendering.
-      For last the array is clear of data */
+      Last the array is clear of data */
 
       // The questions -------------------------------------------------------------------------------------
       let savedQuizData = quizDataFromObj[i]['question'];
       modell.addQuizQuestion('Q' + countQuizQuestionGroup + '. ' + savedQuizData);
 
       // Get the individual question string from modell and forwarding it into the view
+
       getQuestion = modell.quizQuestion;
       for (let i = 0; i < getQuestion.length; i++) {
         getQuestionStr = getQuestion[i]['savedQuizData'];
       }
-      // The answer alternative. An array is created inside every turn.
+      // The answer alternative. An array is created inside every turn.-------------------------------------
       quizAnswerAltGroupArr = [];
       countQuizGroupForm += 1;
 
@@ -285,13 +292,16 @@ var controller = (function () {
       for (let i = 0; i < saveQuizQuestionAnswerAlt1.length; i++) {
           quizAnswerAltGroupArr.push(saveQuizQuestionAnswerAlt1[i]);
         }
-      let saveQuizQuestionAnswerAlt2 = quizDataFromObj[i]['correct_answer'];
 
+      let saveQuizQuestionAnswerAlt2 = quizDataFromObj[i]['correct_answer'];
       quizAnswerAltGroupArr.push(saveQuizQuestionAnswerAlt2);
-      // All the correct answered is store in the modell
-      modell.addQuestionCorrectAnswer(saveQuizQuestionAnswerAlt2);
 
       modell.addQuizQuestionAnswerAlt(quizAnswerAltGroupArr);
+      // ---------------------------------------------------------------------------------------------------
+
+      // // All the correct answered is store in the modell
+      // modell.addQuestionCorrectAnswer(saveQuizQuestionAnswerAlt2);
+
       view.renderQuizContainerQuestion(tabIndexNrQuestionGroup, getQuestionStr, countQuizGroupForm);
       // The array with the answer alternatives are received and its array with the alternatives which are needed loop through
       let getQuestionAnswerAltArr = modell.quizQuestionAnswerAlt;
@@ -311,58 +321,44 @@ var controller = (function () {
         let tabIndexNrQuestionGroupAlt = '' + countQuizQuestionGroup + countRadioBtnNr;
         view.renderQuizAnswerAlt(tabIndexNrQuestionGroupAlt, getAnswerAltstr, countQuizQuestionGroup, countRadioBtnNr); // Fault????
       }
+      // Emptying the arraies
+      modell.quizQuestion.length = 0;
+      modell.quizQuestionAnswerAlt.length = 0;
     }
+
     view.createSubmitBtn();
     quizSubmit();
 
-    // Emptying the arraies
-    modell.quizQuestion.length = 0;
-    modell.quizQuestionAnswerAlt.length = 0;
   }
   // Save the incomming data from the API and send it into the modell
 
-  //Submit the quiz
+  //Submit the quiz and prevent i to reload
+  document.querySelector("#quizPage").addEventListener("submit", (event) => event.preventDefault());
+  countQuizTurns$1 = 1;
   function quizSubmit () {
     let getQuizSubmitBtn = document.querySelector('#submitQuiz');
-    getQuizSubmitBtn.addEventListener('submit', function(event) {
-      event.preventDefault();
-      let targetRadioStr;
+    getQuizSubmitBtn.addEventListener('click', function() {
+      document.querySelector('#resultModal').setAttribute('style', 'display: block');
 
-      let formForRadio = view.getQuizPage;
-      let nameRadioBtn = document.querySelectorAll('.radioBtn');
-      for (let i = 0; i < nameRadioBtn.length; i++) {
-        let saveRadioBtnName = nameRadioBtn[i].getAttribute('name');
-        let targetRadiosBtn = formForRadio.elements[saveRadioBtnName];
 
-          // loop through list of radio buttons
-          for (let i = 0, len = targetRadiosBtn.length; i < len; i++) {
-            if (targetRadiosBtn[i].checked) {
-              targetRadioStr = targetRadiosBtn[i].value;
-              modell.addYourAnswer(targetRadioStr);
-              break;
-            }
-          }
-        }
-
-  // Your answer is catching´and send into the modell when finish the calculateResult is loading
-
-      calculateResult();
-
+  // Your answer is catching and send into the modell when finish the calculateResult is loading
+      //calculateResult();
       let mordalBtn = document.querySelectorAll('#modalBtn button');
       for (let i = 0; i < mordalBtn.length; i++) {
         let getTargetMordalBtn = mordalBtn[i];
         getTargetMordalBtn.addEventListener('click', function(e) {
           let tagetE = e.target;
           if (tagetE.textContent === 'New Quiz') {
-            countQuizTurns$1 += 1;
-            view.countQuizTurns(countQuizTurns$1);
+            //view.countQuizTurns(countQuizTurns);
             view.getQuizPage.scrollTop = 0;
             view.getResultModal.setAttribute('style', 'display: none');
-            view.getQuizPage.textContent = '';
+            view.getQuizPage.textContent = ' ';
+
             runQuizTurn();
           }
-          else if (tagetE.textContent === 'Close') ;
-          //event.preventDefault();
+          else if (tagetE.textContent === 'Close') {
+            location.reload();
+          }
         });
       }
     });
@@ -370,57 +366,35 @@ var controller = (function () {
   /* Both your answered and the correct answer is incomming from the modell.
   If the both strings match from your answered and the corect answered, it will be a
   add calculation for the finish result which will be showed in the mortal box */
-    let countCorrectAnswered = 0;
-  function calculateResult () {
-    countQuizQuestionGroup = 0;
-    let questionsAnswer = modell.yourAnswer;
-    for (let i = 0; i < questionsAnswer.length; i++) {
-      countQuizQuestionGroup += 1;
-      let getYourAnsweredStr = questionsAnswer[i]['yourAnswered'];
-
-      let questionsCorrectAnswer = modell.questionCorrectAnswer;
-      let getCorrectAnswerStr = questionsCorrectAnswer[i]['saveCorrectAnswer']; // Error undefined
-
-
-      if (getYourAnsweredStr === getCorrectAnswerStr) {
-        countCorrectAnswered += 1;
-      }
-      view.renderResultModal(countCorrectAnswered, countQuizQuestionGroup);
-    }
-    // Emtying the arraies
-    //modell.questionCorrectAnswer.length = 0;
-  //  modell.yourAnswer.length = 0;
-
-  }
-  view.renderStatsPage(countCorrectAnswered, countQuizQuestionGroup);
-  // keyBoardListenSpaceEnterRadioChecker();
+  //   let countCorrectAnswered = 0;
+  // function calculateResult () {
   //
-  // function keyBoardListenSpaceEnterRadioChecker () {
-  //   console.log('fvd');
-  //   let getTargetRadio = document.querySelectorAll('.quizAnswerAlt');
-  //   console.log(getTargetRadio);
-  //   for (let i = 0; i < getTargetRadio.length; i++) {
-  //     let getRadio = getTargetRadio[i]; //getAttribute('tabIndex');
-  //     console.log(getRadio);
+  //   countQuizQuestionGroup = 0;
+  //   let questionsAnswer = modell.yourAnswer;
+  //   for (let i = 0; i < questionsAnswer.length; i++) {
+  //     countQuizQuestionGroup += 1;
+  //     let getYourAnsweredStr = questionsAnswer[i]['yourAnswered'];
+  //
+  //     let questionsCorrectAnswer = modell.questionCorrectAnswer;
+  //     let getCorrectAnswerStr = questionsCorrectAnswer[i]['saveCorrectAnswer']; // Error undefined
+  //
+  //
+  //     if (getYourAnsweredStr === getCorrectAnswerStr) {
+  //       countCorrectAnswered += 1;
+  //     }
+  //     view.renderResultModal(countCorrectAnswered, countQuizQuestionGroup);
   //   }
+  //   // Emtying the arraies
+  //   //modell.questionCorrectAnswer.length = 0;
+  // //  modell.yourAnswer.length = 0;
   //
-  //   document.addEventListener('keydown', function(event) {
-  //     let targetKey = event.which;
-  //
-  //     // if (targetKey === 13 || targetKey === 32) {
-  //       //
-  //       //   document.getElementById("red").checked = true;
-  //       // }
-  //     });
   // }
+  view.renderStatsPage(//countCorrectAnswered,
+    countQuizQuestionGroup);
 
-    // 32 = Space and 13 = Enter
-    //}
 
     console.log(modell.quizQuestion);
     console.log(modell.quizQuestionAnswerAlt);
-    console.log(modell.yourAnswer);
-    console.log(modell.questionCorrectAnswer);
 
   var controller = {
     htmlDecode: htmlDecode
