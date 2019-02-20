@@ -1,0 +1,17 @@
+{
+  "name": "ux_design-inlemningsuppgift",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data/mvc/controller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
+    "@babel/register": "^7.0.0",
+    "rollup": "^1.1.2"
+  }
+}

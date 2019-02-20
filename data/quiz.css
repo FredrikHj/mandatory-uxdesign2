@@ -1,0 +1,61 @@
+/* Quiz Master - Rendering from JS */
+.quizContainer{
+  margin-left: 15px;
+  width: 100%;
+}
+.quizQuestion{
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.quizForm{
+  margin-top: 15px;
+}
+.radioBtnStyle{
+  margin-left: 10px;
+}
+.quizLabelAnswerAlt{
+  margin-left: 10px;
+}
+.groupLine{
+  margin-top: 25px;
+  margin-left: calc(50% - 37.5%);
+  margin-bottom: 15px;
+  width: 75%;
+  height: 2px;
+  background-color: black;
+}
+#submitQuiz{
+  position: relative;
+  width: 75px;
+  top: 50px;
+  left: calc(50% - 50px);
+}
+#resultModal{
+  position: relative;
+  top: calc(-50% - 75px);
+  left: calc(50% - 175px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 150px;
+  width: 350px;
+  border: 2px solid lightgrey;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 9px 10px 712px 222px grey;
+  display: none;
+}
+#insurtQuizResult{
+  margin-left: 10px;
+  width: 100%;
+}
+#modalBtn{
+  display: flex;
+  justify-content: space-around;
+}
+#modalBtn button{
+  background: none;
+  border: none;
+}

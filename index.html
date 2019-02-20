@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8">
+    <title>Quiz Master</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="data/style.css">
+    <!-- jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous">
+    </script>
+    <script src="bundle.js" defer></script>
+  </head>
+  <body>
+    <section id="outerBorder">
+      <header>
+        <section id="headerContainer">
+          <button type="button" id="quizSideMenueBtn" tabindex="-1"><img src="data/baseline_menu_white_24dp.png" id="quizSideMenueImg" tabindex="2" alt="SidemenueBtn"></button>
+            <span id="quizHeadLine" tabindex="1"></span>
+        </section>
+        <section id="drawerMenuFrame">
+          <section id="drawerMenuContainer">
+            <p id="drawerMenuHeadline" tabindex="1000">Quiz Master</p>
+            <hr>
+            <section>
+              <div tabindex="1001">
+                <div class="drawerMenuCircle"></div><button type="button" class="drawerMenuBtn"><p class="drawerMenutext">Game screen</p></button>
+              </div>
+
+              <div tabindex="1002">
+                <div class="drawerMenuCircle" ></div><button type="button" class="drawerMenuBtn"><p class="drawerMenutext">Stats</p></button>
+              </div>
+              <div tabindex="1003">
+                <div class="drawerMenuCircle"></div><button type="button" class="drawerMenuBtn"><p class="drawerMenutext">About this app</p></button>
+              </div>
+            </section>
+          </section>
+        </section>
+      </header>
+      <main>
+        <!-- button type="button" id="runQuizBtn"> <h2>START QUIZ</h2></button -->
+        <section id="quizPlayed" tabindex="3"></section>
+        <!-- section id="loadQuizData"></section -->
+        <section id="loadContent">
+          <section id="statsBox">
+            <p class="container__text">Games Played</p>
+            <p class="container__nr" id="container__nr1"></p>
+
+            <p class="container__text">Correct Answers</p>
+            <p class="container__nr" id="container__nr2"></p>
+
+            <p class="container__text">Incorrect Answers</p>
+            <p class="container__nr" id="container__nr3"></p>
+
+            <p class="container__text">Correct Percentage</p>
+            <p class="container__nr" id="container__nr4"></p>
+          </section>
+          <section id="abotPage">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec posuere arcu, id fermentum sem. Ut lobortis ligula eu ante suscipit suscipit. Ut accumsan sem non ante ullamcorper congue. Vivamus ut urna faucibus, pellentesque nisl vitae, luctus neque. Cras velit diam, finibus eget pulvinar eu, vestibulum ac urna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            <br><br>
+            Fusce fringilla finibus maximus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vitae commodo tellus, vel porttitor lorem. In vulputate lacus ut dui tempus ultricies et vitae neque. Praesent tristique tincidunt enim vel ultrices.
+            <br><br>
+            Pellentesque augue nulla, malesuada eget est mollis, bibendum placerat mauris. Donec sit amet tortor leo. Quisque porta dui sit amet rutrum consequat. Pellentesque neque sapien, hendrerit cursus urna in, mattis blandit tellus. Vivamus tincidunt lectus quis lorem volutpat, eget consectetur dolor auctor. Aliquam urna elit, fermentum rutrum porttitor ut, laoreet quis neque.
+          </section>
+          <form id="quizPage"></form>
+        </section>
+        <section id="resultModal">
+          <p id="modalHeadLine">Congratulations!</p>
+          
+          <p id="insurtQuizResult"></p>
+          <div id="modalBtn">
+            <button type="button" name="button">New Quiz</button>
+            <button type="button" name="button">Close</button>
+          </div>
+        </section>
+      </main>
+  </section>
+  </body>
+</html>
