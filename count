@@ -1,0 +1,6 @@
+let countQuizTurns = 0;
+countQuizGameTurns();
+function countQuizGameTurns () {
+  countQuizTurns += 1;
+  getQuizPlayed.textContent = 'Quiz ' + countQuizTurns;
+}
