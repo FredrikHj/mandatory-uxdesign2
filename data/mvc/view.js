@@ -3,9 +3,9 @@ import controller from './controller.js';
 
 let getQuizPlayed = document.querySelector('#quizPlayed');
 
-function countQuizTurns (countQuizTurns) {
-  countQuizTurns += 1;
-  getQuizPlayed.textContent = 'Quiz ' + countQuizTurns;
+function countQuizGameTurns (countQuizGameTurns) {
+  countQuizGameTurns += 1;
+  getQuizPlayed.textContent = 'Quiz ' + countQuizGameTurns;
 }
 
 // Definening varbles which are in diff functions and must working in diff funtions
@@ -24,7 +24,7 @@ function loadQuizHeadLine (quizHeadLine) {
 /* Create a container for the questtions named "quizContainer"
 Insurt the question inside a p element named "quizQuestion" */
 
-function renderQuizContainerQuestion (tabIndexNrQuestionGroup, insurtQuestionStr, countQuizGroupForm) {
+function renderQuizContainerQuestion (tabIndexNrQuestionGroup, insurtQuestionStr) {
   createdQuizContainerGroup = document.createElement('section');
   createdQuizContainerGroup.setAttribute('class', 'quizContainer');
 
@@ -41,12 +41,10 @@ function renderQuizContainerQuestion (tabIndexNrQuestionGroup, insurtQuestionStr
   let getQuestionGroupLine = document.createElement('div');
   getQuestionGroupLine.setAttribute('class', 'groupLine');
   getQuizPage.appendChild(getQuestionGroupLine);
-
-  //controller.getCorrectAnswer(countQuizGroupForm);
 }
 
-function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, countQuizQuestionGroup, countRadioBtnNr) {
-// console.log('Grup: ' + countQuizQuestionGroup);
+function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, countQuizQuestionNr, countRadioBtnNr) {
+// console.log('Grup: ' + countQuizQuestionNr);
 // console.log('Btn Nr: ' + countRadioBtnNr);
   //console.log('Svarsalternative ' + insurtAnswerAltstr);
   /* Getting a counter the question gropup for the radioBtn.
@@ -56,18 +54,17 @@ function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, co
 
   let createdAnswerAltContainer = document.createElement('div');
   createdAnswerAltContainer.setAttribute('class', 'quizAnswerAlt');
-  let createdAnswerAltBtn = document.createElement('input'); // Must ha tabindex for rowking
+  let createdAnswerAltBtn = document.createElement('input'); // Must ha tabindex
   createdAnswerAltBtn.tabIndex = tabIndexNrQuestionGroupAlt;
   createdAnswerAltBtn.setAttribute('type', 'radio');
-  createdAnswerAltBtn.setAttribute('name', 'radioBtn' + countQuizQuestionGroup);
+  createdAnswerAltBtn.setAttribute('name', 'radioBtn' + countQuizQuestionNr);
   createdAnswerAltBtn.setAttribute('class', 'radioBtn');
-  //createdAnswerAltBtn.setAttribute('id', 'radioBtn' + countQuizQuestionGroup + '_' + countRadioBtnNr);
-  createdAnswerAltBtn.setAttribute('value', insurtAnswerAltstr);
+  createdAnswerAltBtn.setAttribute('id', 'radioBtn' + countQuizQuestionNr + '_' + countRadioBtnNr);
+  createdAnswerAltBtn.setAttribute('value', controller.htmlDecode(insurtAnswerAltstr));
 
   let getSpanAnsweringAltLabel = document.createElement('span');
   let getAnsweringAltLabel = document.createElement('label');
-
-  getAnsweringAltLabel.setAttribute('for', 'radioBtn' + countQuizQuestionGroup + '_' + countRadioBtnNr);
+  getAnsweringAltLabel.setAttribute('for', 'radioBtn' + countQuizQuestionNr + '_' + countRadioBtnNr);
   //getAnsweringAltLabel.setAttribute('class', 'quizAnswerAlt');
 
   getSpanAnsweringAltLabel.textContent = controller.htmlDecode(insurtAnswerAltstr);
@@ -90,17 +87,17 @@ function createSubmitBtn () {
   getCreatedBtnSubmit.textContent = 'Done';
   getQuizPage.appendChild(getCreatedBtnSubmit);
 }
-function renderResultModal (countCorrectAnswered, countQuizQuestionGroup) {
+function renderResultModal (countCorrectAnswered, countQuizQuestionNr) {
   let insurtQuestionResult = document.querySelector('#insurtQuizResult');
-  insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + countQuizQuestionGroup + ' questions correct!';
-  getResultModal.setAttribute('style', 'display: block');
+  insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + countQuizQuestionNr + ' questions correct!';
+//  getResultModal.setAttribute('style', 'display: block');
 }
 
-function renderStatsPage (countCorrectAnswered, countQuizQuestionGroup) {
+function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
   console.log('vfdzv');
   let getStatsNr1 = document.querySelector('#container__nr1');
   console.log(getStatsNr1);
-  getStatsNr1.textContent = countQuizQuestionGroup;
+  getStatsNr1.textContent = countQuizQuestionNr;
 
 
   let getStatsNr2 = document.querySelector('#container__nr2');
@@ -123,7 +120,7 @@ function renderStatsPage (countCorrectAnswered, countQuizQuestionGroup) {
 export default {
   getQuizPlayed: getQuizPlayed,
   loadQuizHeadLine: loadQuizHeadLine,
-  countQuizTurns: countQuizTurns,
+  countQuizGameTurns: countQuizGameTurns,
   getQuizPage: getQuizPage,
   renderQuizContainerQuestion: renderQuizContainerQuestion,
   renderQuizAnswerAlt: renderQuizAnswerAlt,

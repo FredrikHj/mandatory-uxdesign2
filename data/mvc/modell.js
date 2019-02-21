@@ -12,8 +12,8 @@ export default {
     this.quizQuestion.push({ savedQuizData: savedQuizData });
   },
   quizQuestionAnswerAlt: [],
-  addQuizQuestionAnswerAlt: function (quizAnswerAltGroupArr) {
-    this.quizQuestionAnswerAlt.push({ quizAnswerAltGroupArr: quizAnswerAltGroupArr });
+  addQuizQuestionAnswerAlt: function (quizAnswerAltArr) {
+    this.quizQuestionAnswerAlt.push({ quizAnswerAltArr: quizAnswerAltArr });
   }
   // questionCorrectAnswer: [],
   //   addQuestionCorrectAnswer: function (saveCorrectAnswer) {

@@ -3,25 +3,20 @@ import view from './view.js';
 import modell from './modell.js';
 //startApp();
 
-//let countQuizGroupAnswerAlt = 0;
-let countQuizGroupForm = 0;
-// Counter for how many times you had played the Quiz
-let countQuizTurns = 0;
-let countQuizQuestionGroup = 0;
+/* Counters for the QuizApp: -------------------------------------------
+   Question groups
+   GameTurns */
+let countQuizQuestionNr = 0;
+let countQuizGameTurns = 0;
 
-
-//let insurtQuizQuestionAnswerAlt = [];
-let quizAnswerAltGroupArr, getAnswerAltFromArr, getAnswerAltstr, getQuestion;
-
-// Decode the strings chowinf correct text
+// Some usefull functions ----------------------------------------------
+// Decode the strings chowin correct text
 function htmlDecode (input) {
   let textStrTohtml = new DOMParser().parseFromString(input, "text/html");
   return textStrTohtml.documentElement.textContent;
 }
 // Sending a headline string into the function
 view.loadQuizHeadLine('Quiz Master');
-
-
 // Showing the side menue and handle the buttons inside it
 drawerMenu();
 function drawerMenu () {
@@ -70,166 +65,152 @@ function drawerMenu () {
   }
 }
 
-
-
-runQuizTurn();
+runQuizGameTurn();
 // Run a turn of the QUIZ
-function runQuizTurn () {
-  view.countQuizTurns(countQuizTurns);
+function runQuizGameTurn () {
+  let requestQuizQuestions;
+  view.countQuizGameTurns(countQuizGameTurns);
 
 // let getQuizBtn = document.querySelector('#runQuiz');
 // getQuizBtn.addEventListener('click', function () {
-console.log('2.) Modellen för mina frågor ser ut enligt:');
-console.log(modell.quizQuestion);
-  let requestQuizQuestions = new XMLHttpRequest();
-  requestQuizQuestions.addEventListener('load', getQuizData);
+  requestQuizQuestions = new XMLHttpRequest();
+  requestQuizQuestions.addEventListener('load', function() {
+    let incommingQuizData = JSON.parse(this.responseText);
+    let quizDataFromObj = incommingQuizData['results'];
+    console.log('1.) Inkommande data från objektet där jag tar ut resultatet!');
+    console.log(quizDataFromObj);
+    createCounterGetModellValues(quizDataFromObj);
+  });
   requestQuizQuestions.open("GET", 'https://opentdb.com/api.php?amount=10');
   requestQuizQuestions.send();
-  // Remove the eventlistener !!!
 //})
 }
 
-function getQuizData () {
-  let incommingQuizData = JSON.parse(this.responseText);
-  let quizDataFromObj = incommingQuizData['results'];
-  console.log('1.) Inkommande data från objektet där jag tar ut resultatet!');
-  console.log(quizDataFromObj);
-  createCounterGetModellValues(quizDataFromObj);
-}
 /* The length in quizDataFromObj is according the incommingQuizData
 above and is state in urlStr */
 function createCounterGetModellValues (quizDataFromObj) {
-  countQuizQuestionGroup = 0;
-  let getQuestionStr;
+  countQuizQuestionNr = 0;
   for (let i = 0; i < quizDataFromObj.length; i++) {
     /* A counter is created which count for both the question groups and
     the answering group. The counters which is part of the question are defined above and increase by one inside every round turn.
     I define a tabindex nr for the question starting at 10 and every 10 after it. */
-    countQuizQuestionGroup += 1;
-    let tabIndexNrQuestionGroup = countQuizQuestionGroup + '0';
+    countQuizQuestionNr += 1;
+    let tabIndexNrQuestionGroup = countQuizQuestionNr + '0';
 
     /* The data received from the modell and insurted into the view for rendering.
     Last the array is clear of data */
 
     // The questions -------------------------------------------------------------------------------------
     let savedQuizData = quizDataFromObj[i]['question'];
-    modell.addQuizQuestion('Q' + countQuizQuestionGroup + '. ' + savedQuizData);
+    modell.addQuizQuestion('Q' + countQuizQuestionNr + '. ' + savedQuizData);
 
     // Get the individual question string from modell and forwarding it into the view
-
-    getQuestion = modell.quizQuestion;
+    let getQuestionStr;
+    let getQuestion = modell.quizQuestion;
     for (let i = 0; i < getQuestion.length; i++) {
       getQuestionStr = getQuestion[i]['savedQuizData'];
     }
     // The answer alternative. An array is created inside every turn.-------------------------------------
-    quizAnswerAltGroupArr = [];
-    countQuizGroupForm += 1;
+    let quizAnswerAltArr = []
 
     //Mergeing 2 objs strings into one array (The answer alternatives) and send it into the modell
     let saveQuizQuestionAnswerAlt1 = quizDataFromObj[i]['incorrect_answers'];
     for (let i = 0; i < saveQuizQuestionAnswerAlt1.length; i++) {
-        quizAnswerAltGroupArr.push(saveQuizQuestionAnswerAlt1[i]);
-      }
+      quizAnswerAltArr.push(saveQuizQuestionAnswerAlt1[i]);
+    }
 
     let saveQuizQuestionAnswerAlt2 = quizDataFromObj[i]['correct_answer'];
-    quizAnswerAltGroupArr.push(saveQuizQuestionAnswerAlt2);
+    quizAnswerAltArr.push(saveQuizQuestionAnswerAlt2);
 
-    modell.addQuizQuestionAnswerAlt(quizAnswerAltGroupArr);
+    modell.addQuizQuestionAnswerAlt(quizAnswerAltArr);
     // ---------------------------------------------------------------------------------------------------
+    view.renderQuizContainerQuestion(tabIndexNrQuestionGroup, getQuestionStr);
 
-    // // All the correct answered is store in the modell
-    // modell.addQuestionCorrectAnswer(saveQuizQuestionAnswerAlt2);
-
-    view.renderQuizContainerQuestion(tabIndexNrQuestionGroup, getQuestionStr, countQuizGroupForm);
-    // The array with the answer alternatives are received and its array with the alternatives which are needed loop through
+  /* The array with the answer alternatives are received and the array
+   with the alternatives are needed loop through */
     let getQuestionAnswerAltArr = modell.quizQuestionAnswerAlt;
-    //console.log(getQuestionAnswerAltArr);
+    let getAnswerAltFromArr;
     for (let i = 0; i < getQuestionAnswerAltArr.length; i++) {
-      getAnswerAltFromArr = getQuestionAnswerAltArr[i]['quizAnswerAltGroupArr'];
+      getAnswerAltFromArr = getQuestionAnswerAltArr[i]['quizAnswerAltArr'];
     }
 
     // A counter for specific radioBtn in a group
     let countRadioBtnNr = 0;
+    let getAnswerAltstr;
     for (let i = 0; i < getAnswerAltFromArr.length; i++) {
       countRadioBtnNr += 1;
-      //console.log(countQuizGroup);
-      // Correct answer is index = 3
+      // Correct answer is index = 3 but then shuffeled
       getAnswerAltstr = getAnswerAltFromArr[i];
       // I define tabindex for answeringAlt based the question tabindex follow by a nr 1,2,3,4 ....
-      let tabIndexNrQuestionGroupAlt = '' + countQuizQuestionGroup + countRadioBtnNr;
-      view.renderQuizAnswerAlt(tabIndexNrQuestionGroupAlt, getAnswerAltstr, countQuizQuestionGroup, countRadioBtnNr); // Fault????
+      let tabIndexNrQuestionGroupAlt = '' + countQuizQuestionNr + countRadioBtnNr;
+      view.renderQuizAnswerAlt(tabIndexNrQuestionGroupAlt, getAnswerAltstr, countQuizQuestionNr, countRadioBtnNr); // Fault????
     }
     // Emptying the arraies
     modell.quizQuestion.length = 0;
     modell.quizQuestionAnswerAlt.length = 0;
-  }
 
+      var getCorrectAnswerStr = quizDataFromObj[i]['correct_answer'];
+          calculateResult(getCorrectAnswerStr);
+  }
+  // Some functions to be running rright after the main function
   view.createSubmitBtn();
   quizSubmit();
-
 }
-// Save the incomming data from the API and send it into the modell
-
-//Submit the quiz and prevent i to reload
+//Submit the quiz and prevent reloading
 document.querySelector("#quizPage").addEventListener("submit", (event) => event.preventDefault());
-countQuizTurns = 1;
-function quizSubmit () {
+countQuizGameTurns = 1;
+function quizSubmit (calcResult) {
   let getQuizSubmitBtn = document.querySelector('#submitQuiz');
   getQuizSubmitBtn.addEventListener('click', function() {
     document.querySelector('#resultModal').setAttribute('style', 'display: block');
-    let targetRadioStr;
+
+
+
+// Börja här 
 
 
 // Your answer is catching and send into the modell when finish the calculateResult is loading
-    //calculateResult();
     let mordalBtn = document.querySelectorAll('#modalBtn button');
     for (let i = 0; i < mordalBtn.length; i++) {
       let getTargetMordalBtn = mordalBtn[i];
       getTargetMordalBtn.addEventListener('click', function(e) {
-        let tagetE = e.target;
-        if (tagetE.textContent === 'New Quiz') {
-          //view.countQuizTurns(countQuizTurns);
+        let targetE = e.target;
+        if (targetE.textContent === 'New Quiz') {
+          //view.countQuizGameTurns(countQuizGameTurns);
           view.getQuizPage.scrollTop = 0;
           view.getResultModal.setAttribute('style', 'display: none');
           view.getQuizPage.textContent = ' ';
-
-          runQuizTurn();
+          runQuizGameTurn();
         }
-        else if (tagetE.textContent === 'Close') {
+        else if (targetE.textContent === 'Close') {
           location.reload();
         }
       });
     }
   });
 }
-/* Both your answered and the correct answer is incomming from the modell.
-If the both strings match from your answered and the corect answered, it will be a
-add calculation for the finish result which will be showed in the mortal box */
-//   let countCorrectAnswered = 0;
-// function calculateResult () {
-//
-//   countQuizQuestionGroup = 0;
-//   let questionsAnswer = modell.yourAnswer;
-//   for (let i = 0; i < questionsAnswer.length; i++) {
-//     countQuizQuestionGroup += 1;
-//     let getYourAnsweredStr = questionsAnswer[i]['yourAnswered'];
-//
-//     let questionsCorrectAnswer = modell.questionCorrectAnswer;
-//     let getCorrectAnswerStr = questionsCorrectAnswer[i]['saveCorrectAnswer']; // Error undefined
-//
-//
-//     if (getYourAnsweredStr === getCorrectAnswerStr) {
-//       countCorrectAnswered += 1;
-//     }
-//     view.renderResultModal(countCorrectAnswered, countQuizQuestionGroup);
-//   }
-//   // Emtying the arraies
-//   //modell.questionCorrectAnswer.length = 0;
-// //  modell.yourAnswer.length = 0;
-//
-// }
+
+function calculateResult (getCorrectAnswerStr) {
+    let countCorrectAnswered = 0;
+  let getYourAnswerStr;
+  let getRadioBtn = document.querySelectorAll('.radioBtn');
+  for (let i = 0; i < getRadioBtn.length; i++) {
+    let getCheckedRadioStr = getRadioBtn[i];
+    if (getCheckedRadioStr.checked) {
+      getYourAnswerStr = getCheckedRadioStr.value;
+      console.log(getYourAnswerStr);
+      if (getYourAnswerStr === getCorrectAnswerStr) {
+      countCorrectAnswered += 1;
+      console.log(countCorrectAnswered);
+      }
+    }
+
+  }
+  view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
+}
+
 view.renderStatsPage(//countCorrectAnswered,
-  countQuizQuestionGroup);
+  countQuizQuestionNr);
 
 
   console.log(modell.quizQuestion);
