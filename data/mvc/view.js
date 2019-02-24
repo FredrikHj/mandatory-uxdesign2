@@ -5,9 +5,12 @@ import controller from './controller.js';
 let getQuizPlayed = document.querySelector('#quizPlayed');
 let getQuizPage = document.querySelector('#quizPage');
 let createdQuizContainerGroup;
-let countQuizGameTurn = 1;
-countQuizGameTurns(countQuizGameTurn);
-function countQuizGameTurns (countQuizGameTurn) {
+let countQuizGameTurn = 0;
+//let totQuizGameTurns = 0;
+let totQuizAnswer = 0;
+countQuizGameTurns();
+function countQuizGameTurns () {
+  countQuizGameTurn += 1;
   getQuizPlayed.textContent = 'Quiz ' + countQuizGameTurn;
 }
 
@@ -75,24 +78,25 @@ function renderResultModal (countCorrectAnswered, countQuizQuestionNr) {
   console.log('countQuizQuestionNr: ' + countQuizQuestionNr);
   console.log('countQuizGameTurn 77 ' + countQuizGameTurn); // error in calc
   let insurtQuestionResult = document.querySelector('#insurtQuizResult');
-  let totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
+  totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
   console.log('Tot' + totQuizAnswer);
   insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
 }
 
 function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
   let getStatsNr1 = document.querySelector('#container__nr1');
-  let totQuizGameTurns = countQuizQuestionNr * countQuizQuestionNr;
-  getStatsNr1.textContent = totQuizGameTurns;
+  getStatsNr1.textContent = countQuizGameTurn;
 
   let getStatsNr2 = document.querySelector('#container__nr2');
   getStatsNr2.textContent = countCorrectAnswered;
 
   let getStatsNr3 = document.querySelector('#container__nr3');
-  getStatsNr3.textContent = 0;
+  let totIncorrectAnswer = totQuizAnswer - countCorrectAnswered;
+  getStatsNr3.textContent = totIncorrectAnswer;
 
   let getStatsNr4 = document.querySelector('#container__nr4');
-  getStatsNr4.textContent = 0 + '%';
+  let percCorrect = countCorrectAnswered / (totIncorrectAnswer + countCorrectAnswered)
+  getStatsNr4.textContent = percCorrect * 10 + '%';
 }
 s
 export default {

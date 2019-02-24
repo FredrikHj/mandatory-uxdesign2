@@ -1,0 +1,178 @@
+#outerBorder{
+  margin-top: 100px;
+  margin-left: calc(50% - 300px);
+  width: 600px;
+  box-shadow: 0px 0px 7000px 15px black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 4px solid black;
+  border-radius: 55px;
+}
+header{
+  color: white;
+  height: 100px;
+  background-color: darkblue;
+  display: flex;
+  flex-direction: row;
+  justify-content:flex-start;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+}
+.hbar i{
+  margin-top: 50px;
+}
+#quizHeadLine{
+  position: relative;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 50px;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+main{
+  height: 620px;
+  background-color: orange;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+#runQuiz{
+  position: relative;
+  top: 250px;
+  left: 225px;
+}
+#quizPage{
+  padding-top: 10px;
+  display: block;
+  margin-top: 50px;
+  margin-left: 100px;
+  width: 400px;
+  height: 400px;
+  background-color: white;
+  overflow-y: scroll;
+}
+#quizPlayed{
+  margin-left: 15px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  font-size: 17px;
+  font-weight: bold;
+}
+/* Quiz Master - Rendering from JS */
+.quizContainer{
+  margin-left: 15px;
+  width: 100%;
+}
+.quizQuestion{
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.quizForm{
+  margin-top: 15px;
+}
+.radioBtnStyle{
+  margin-left: 10px;
+}
+.quizLabelAnswerAlt{
+  margin-left: 10px;
+}
+.groupLine{
+  margin-top: 25px;
+  margin-left: calc(50% - 37.5%);
+  margin-bottom: 15px;
+  width: 75%;
+  height: 2px;
+  background-color: black;
+}
+#submitQuiz{
+  position: relative;
+  width: 75px;
+  top: 50px;
+  left: calc(50% - 50px);
+}
+/* Modal popup ---------------------------------------- -*/
+#resultModal{
+  position: relative;
+  top: calc(-50% - 75px);
+  left: calc(50% - 175px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 150px;
+  width: 350px;
+  border: 2px solid lightgrey;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 9px 10px 712px 222px grey;
+  display: none;
+}
+#insurtQuizResult{
+  margin-left: 10px;
+  width: 100%;
+}
+#modalBtn{
+  display: flex;
+  justify-content: space-around;
+}
+#modalBtn button{
+  background: none;
+  border: none;
+}
+/* VG part */
+#drawerMenuFrame{
+  position: relative;
+  display: none;
+  top: -594px;
+  width: 516px;
+  height: 719px;
+  background-color: white;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+#drawerMenuFrame hr{
+  width: 450px;
+}
+#drawerMenuContainer{
+  position: relative;
+  top: 150px;
+  left: 20px;
+}
+#drawerMenuHeadline{
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+#drawerMenuFrame div{
+  position: relative;
+  margin-bottom: 20px;
+}
+.drawerMenuCircle{
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid black;
+  border-radius: 20px;
+
+}
+.drawerMenutext{
+  position: relative;
+  top: -23px;
+  margin-left: 20px;
+}
+/* Stats page ------------------------------------------ */
+#statsBox{
+  
+}
+#container{
+
+}
+.container__text{
+
+}
+.container__nr{
+
+}

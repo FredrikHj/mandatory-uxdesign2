@@ -1,7 +1,6 @@
 // ----------------------- The core of the whole Quiz Webbsite -----------------------
 import view from './view.js';
 import modell from './modell.js';
-//startApp();
 
 /* Counters for the QuizApp: -------------------------------------------
    Question groups
@@ -20,11 +19,11 @@ let correctAnswerFromObj;
 let getQuestionStr = '';
 let getYourAnswerStr;
 let getAnswerAltStr;
-let countQuizGameTurn = 1;
+
 let countRadio = 0;
 let correctAnswerOutObj
 
-// Some usefull functions ----------------------------------------------
+// Some usefull functions ---------------------------------------------
 
 // Decode the strings chowin correct text
 function htmlDecode (input) {
@@ -103,7 +102,7 @@ function runQuizGameTurn () {
         console.log(quizDataFromObj);
         ajaxDataIncomming(quizDataFromObj);
       });
-      let questionAmmount = 2;
+      let questionAmmount = 5;
       requestQuiz.open('GET', 'https://opentdb.com/api.php?amount=' + questionAmmount);
       requestQuiz.send();
       return quizDataFromObj;
@@ -222,8 +221,8 @@ function modalBtns () {
     view.getQuizPage.textContent = ' ';
     view.getQuizPage.scrollTop = 0;
     document.querySelector('#resultModal').style.display = 'none';
-    countQuizGameTurn += 1;
-    view.countQuizGameTurns (countQuizGameTurn);
+
+    view.countQuizGameTurns ();
     runQuizGameTurn();
 
   });

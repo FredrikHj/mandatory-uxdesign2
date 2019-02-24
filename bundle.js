@@ -7,9 +7,12 @@ var controller = (function () {
   let getQuizPlayed = document.querySelector('#quizPlayed');
   let getQuizPage = document.querySelector('#quizPage');
   let createdQuizContainerGroup;
-  let countQuizGameTurn = 1;
-  countQuizGameTurns(countQuizGameTurn);
-  function countQuizGameTurns (countQuizGameTurn) {
+  let countQuizGameTurn = 0;
+  //let totQuizGameTurns = 0;
+  let totQuizAnswer = 0;
+  countQuizGameTurns();
+  function countQuizGameTurns () {
+    countQuizGameTurn += 1;
     getQuizPlayed.textContent = 'Quiz ' + countQuizGameTurn;
   }
 
@@ -73,28 +76,29 @@ var controller = (function () {
   }
 
 
-  function renderResultModal (countCorrectAnswered, countQuizQuestionNr, countQuizGameTurn) {
+  function renderResultModal (countCorrectAnswered, countQuizQuestionNr) {
     console.log('countQuizQuestionNr: ' + countQuizQuestionNr);
     console.log('countQuizGameTurn 77 ' + countQuizGameTurn); // error in calc
     let insurtQuestionResult = document.querySelector('#insurtQuizResult');
-    let totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
+    totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
     console.log('Tot' + totQuizAnswer);
     insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
   }
 
   function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
     let getStatsNr1 = document.querySelector('#container__nr1');
-    let totQuizGameTurns = countQuizQuestionNr * countQuizQuestionNr;
-    getStatsNr1.textContent = totQuizGameTurns;
+    getStatsNr1.textContent = countQuizGameTurn;
 
     let getStatsNr2 = document.querySelector('#container__nr2');
     getStatsNr2.textContent = countCorrectAnswered;
 
     let getStatsNr3 = document.querySelector('#container__nr3');
-    getStatsNr3.textContent = 0;
+    let totIncorrectAnswer = totQuizAnswer - countCorrectAnswered;
+    getStatsNr3.textContent = totIncorrectAnswer;
 
     let getStatsNr4 = document.querySelector('#container__nr4');
-    getStatsNr4.textContent = 0 + '%';
+    let percCorrect = countCorrectAnswered / (totIncorrectAnswer + countCorrectAnswered);
+    getStatsNr4.textContent = percCorrect * 10 + '%';
   }
   var view = {
     getQuizPlayed: getQuizPlayed,
@@ -125,7 +129,6 @@ var controller = (function () {
   };
 
   // ----------------------- The core of the whole Quiz Webbsite -----------------------
-  //startApp();
 
   /* Counters for the QuizApp: -------------------------------------------
      Question groups
@@ -139,10 +142,9 @@ var controller = (function () {
   let getQuestionStr = '';
   let getYourAnswerStr;
   let getAnswerAltStr;
-  let countQuizGameTurn$1 = 1;
   let correctAnswerOutObj;
 
-  // Some usefull functions ----------------------------------------------
+  // Some usefull functions ---------------------------------------------
 
   // Decode the strings chowin correct text
   function htmlDecode (input) {
@@ -221,7 +223,7 @@ var controller = (function () {
           console.log(quizDataFromObj);
           ajaxDataIncomming(quizDataFromObj);
         });
-        let questionAmmount = 2;
+        let questionAmmount = 5;
         requestQuiz.open('GET', 'https://opentdb.com/api.php?amount=' + questionAmmount);
         requestQuiz.send();
         return quizDataFromObj;
@@ -340,8 +342,8 @@ var controller = (function () {
       view.getQuizPage.textContent = ' ';
       view.getQuizPage.scrollTop = 0;
       document.querySelector('#resultModal').style.display = 'none';
-      countQuizGameTurn$1 += 1;
-      view.countQuizGameTurns (countQuizGameTurn$1);
+
+      view.countQuizGameTurns ();
       runQuizGameTurn();
 
     });
@@ -365,8 +367,7 @@ var controller = (function () {
 
           if (getYourAnswerStr === htmlDecode(correctAnswerOutObj)) {
             countCorrectAnswered += 1;
-            countQuizGameTurn$1 += 1;
-            view.renderResultModal(countCorrectAnswered, countQuizQuestionNr, countQuizGameTurn$1);
+            view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
           }
           console.log('-----------------------------------------------------');
           console.log('Rad 243 - Your answer: ' + getYourAnswerStr + ' = ' + ' correct answer: ' + htmlDecode(correctAnswerOutObj) + ' That gives Nr: ' + countCorrectAnswered);

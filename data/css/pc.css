@@ -65,16 +65,9 @@
     overflow-y: scroll;
     overflow-x: hidden;
   }
-  #runQuizBtn{
-    position: relative;
-    top: 250px;
-    left: 225px;
-  }
   #quizPage{
     width: 100%;
     height: 100%;
-    /* overflow-y: scroll;
-    overflow-x: hidden; */
   }
   #quizPlayed{
     margin-left: 29px;
