@@ -5,22 +5,21 @@ import controller from './controller.js';
 let getQuizPlayed = document.querySelector('#quizPlayed');
 let getQuizPage = document.querySelector('#quizPage');
 let createdQuizContainerGroup;
-let countQuizTurns = 0;
-
-function countQuizGameTurns () {
-  countQuizTurns += 1;
-  getQuizPlayed.textContent = 'Quiz ' + countQuizTurns;
+let countQuizGameTurn = 1;
+countQuizGameTurns(countQuizGameTurn);
+function countQuizGameTurns (countQuizGameTurn) {
+  getQuizPlayed.textContent = 'Quiz ' + countQuizGameTurn;
 }
 
-// Html elements are creating in
+// Function for the headline is created and take one string
 function loadQuizHeadLine (quizHeadLine) {
   let getHeadLinePlace = document.querySelector('#quizHeadLine');
   getHeadLinePlace.textContent = quizHeadLine;
 }
-
-/* Create a container for the questtions named "quizContainer"countQuizGameTurns
-Insurt the question inside a p element named "quizQuestion" */
+// ======================================== Html elements are creating ========================================
 function renderQuizContainerQuestion (tabIndexNrQuestionGroup, insurtQuestionStr) {
+  /* Create a container for the questtions named "quizContainer"countQuizGameTurnss
+  Insurt the question inside a p element named "quizQuestion" */
   createdQuizContainerGroup = document.createElement('section');
   createdQuizContainerGroup.setAttribute('class', 'quizContainer');
 
@@ -39,10 +38,12 @@ function renderQuizContainerQuestion (tabIndexNrQuestionGroup, insurtQuestionStr
 function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, countQuizQuestionNr, countRadioBtnNr) {
   let createdAnswerAltContainer = document.createElement('div');
   createdAnswerAltContainer.setAttribute('class', 'quizAnswerAlt');
+
   let createdAnswerAltBtn = document.createElement('input'); // Must ha tabindex
   createdAnswerAltBtn.tabIndex = tabIndexNrQuestionGroupAlt;
   createdAnswerAltBtn.setAttribute('type', 'radio');
-  createdAnswerAltBtn.setAttribute('name', 'radioBtn' + countQuizQuestionNr);
+  let radioBtnName = 'radioBtn' + countQuizQuestionNr;
+  createdAnswerAltBtn.setAttribute('name', radioBtnName);
   createdAnswerAltBtn.setAttribute('class', 'radioBtn');
   createdAnswerAltBtn.setAttribute('id', 'radioBtn' + countQuizQuestionNr + '_' + countRadioBtnNr);
   createdAnswerAltBtn.setAttribute('value', controller.htmlDecode(insurtAnswerAltstr));
@@ -61,19 +62,28 @@ function renderQuizAnswerAlt (tabIndexNrQuestionGroupAlt, insurtAnswerAltstr, co
   createdAnswerAltContainer.appendChild(getAnsweringAltLabel);
   createdQuizContainerGroup.appendChild(createdAnswerAltContainer);
 }
+// ============================================================================================================
 function createSubmitBtn () {
   let getCreatedBtnSubmit = document.createElement('button');
   getCreatedBtnSubmit.setAttribute('id', 'submitQuiz');
   getCreatedBtnSubmit.textContent = 'Done';
   getQuizPage.appendChild(getCreatedBtnSubmit);
 }
-function renderResultModal (countCorrectAnswered, countedQuestionTot) {
+
+
+function renderResultModal (countCorrectAnswered, countQuizQuestionNr) {
+  console.log('countQuizQuestionNr: ' + countQuizQuestionNr);
+  console.log('countQuizGameTurn 77 ' + countQuizGameTurn); // error in calc
   let insurtQuestionResult = document.querySelector('#insurtQuizResult');
-  insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + countedQuestionTot + ' questions correct!';
+  let totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
+  console.log('Tot' + totQuizAnswer);
+  insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
 }
+
 function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
   let getStatsNr1 = document.querySelector('#container__nr1');
-  getStatsNr1.textContent = countQuizQuestionNr;
+  let totQuizGameTurns = countQuizQuestionNr * countQuizQuestionNr;
+  getStatsNr1.textContent = totQuizGameTurns;
 
   let getStatsNr2 = document.querySelector('#container__nr2');
   getStatsNr2.textContent = countCorrectAnswered;
@@ -84,7 +94,7 @@ function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
   let getStatsNr4 = document.querySelector('#container__nr4');
   getStatsNr4.textContent = 0 + '%';
 }
-
+s
 export default {
   getQuizPlayed: getQuizPlayed,
   countQuizGameTurns: countQuizGameTurns,

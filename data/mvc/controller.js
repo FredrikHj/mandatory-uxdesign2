@@ -7,13 +7,25 @@ import modell from './modell.js';
    Question groups
    GameTurns */
 
-let compareCorrectAnswerStr;
+let saveAnswerAltLastStr = '';
+let countCorrectAnswered = 0;
 let countQuizQuestionNr = 0;
-let countedQuestionTot = 0;
+let compareCorrectAnswerStr;
+let correctAnswerObj = {};
 let correctAnswerStr = {};
-let getCorrectAnswerStr;
+let correctAnswerArr = [];
+let quizDataFromObj = [];
+let getAnswerAltObj = '';
+let correctAnswerFromObj;
+let getQuestionStr = '';
+let getYourAnswerStr;
+let getAnswerAltStr;
+let countQuizGameTurn = 1;
+let countRadio = 0;
+let correctAnswerOutObj
 
 // Some usefull functions ----------------------------------------------
+
 // Decode the strings chowin correct text
 function htmlDecode (input) {
   let textStrTohtml = new DOMParser().parseFromString(input, "text/html");
@@ -38,7 +50,7 @@ function drawerMenu () {
         view.loadQuizHeadLine('Quiz Master');
         getDrawerMenuFrame.setAttribute('style', 'display: none');
         document.querySelector('#statsBox').setAttribute('style', 'display: none');
-        document.querySelector('#abotPage').setAttribute('style', 'display: none');
+        document.querySelector('#aboutPage').setAttribute('style', 'display: none');
         view.getQuizPlayed.style.color = 'black';
         view.getQuizPage.setAttribute('style', 'display: block');
 
@@ -46,7 +58,7 @@ function drawerMenu () {
       if (targetText === 'Stats') {
         view.loadQuizHeadLine('Stats');
         getDrawerMenuFrame.setAttribute('style', 'display: none');
-        document.querySelector('#abotPage').setAttribute('style', 'display: none');
+        document.querySelector('#aboutPage').setAttribute('style', 'display: none');
         view.getQuizPage.setAttribute('style', 'display: none');
 
         document.querySelector('#statsBox').setAttribute('style', 'display: block');
@@ -59,7 +71,7 @@ function drawerMenu () {
         document.querySelector('#statsBox').setAttribute('style', 'display: none');
         view.getQuizPage.setAttribute('style', 'display: none');
 
-        document.querySelector('#abotPage').setAttribute('style', 'display: block');
+        document.querySelector('#aboutPage').setAttribute('style', 'display: block');
         document.querySelector('#loadContent').style.borderRadius = '0px';
         view.getQuizPlayed.style.paddingBottom = '10px';
         view.getQuizPlayed.style.color = 'orange';
@@ -71,155 +83,180 @@ function drawerMenu () {
 
 runQuizGameTurn();
 // Run a turn of the QUIZ
+
 function runQuizGameTurn () {
-  let requestQuizQuestions;
 
-// let getQuizBtn = document.querySelector('#runQuiz');
-// getQuizBtn.addEventListener('click', function () {
-console.log("Ska utföra AJAX anrop");
-  requestQuizQuestions = new XMLHttpRequest();
-  requestQuizQuestions.addEventListener('load', function() {
-    let incommingQuizData = JSON.parse(this.responseText);
-    let quizDataFromObj = incommingQuizData['results'];
-    console.log('1.) Inkommande data från objektet där jag tar ut resultatet!');
-    console.log(quizDataFromObj);
-    createCounterGetModellValues(quizDataFromObj);
-  });
-  requestQuizQuestions.open("GET", 'https://opentdb.com/api.php?amount=10');
-  requestQuizQuestions.send();
-//})
-}
+  // ============================================= Handle Ajax and its data =============================================
+  ajaxRequest();
 
-/* The length in quizDataFromObj is according the incommingQuizData
-above and is state in urlStr */
-function createCounterGetModellValues (quizDataFromObj) {
-  countQuizQuestionNr = 0;
-  // Rerender the dom
-  view.getQuizPage.textContent = ' ';
-
-  for (let i = 0; i < quizDataFromObj.length; i++) {
-    /* A counter is created which count for both the question groups and
-    the answering group. The counters which is part of the question are defined above and increase by one inside every round turn.
-    I define a tabindex nr for the question starting at 10 and every 10 after it. */
-    countQuizQuestionNr += 1;
-    let tabIndexNrQuestionGroup = countQuizQuestionNr + '0';
-
-    /* The data received from the modell and inserted into the view for rendering.
-    Last the array is clear of data */
-    // The questions -------------------------------------------------------------------------------------
-    let getQuestionStr;
-    getQuizQuestion(quizDataFromObj[i]);
-    function getQuizQuestion(quizDataFromObj) {
-      let savedQuizData = quizDataFromObj['question'];
-      modell.addQuizQuestion('Q' + countQuizQuestionNr + '. ' + savedQuizData);
-
-      // Get the individual question string from modell and forwarding it into the view
-      let getQuestion = modell.quizQuestion;
-      for (let i = 0; i < getQuestion.length; i++) {
-        getQuestionStr = getQuestion[i]['savedQuizData'];
-      }
+  function ajaxRequest() {
+    // let getQuizBtn = document.querySelector('#runQuiz');
+    let requestQuiz;
+    // getQuizBtn.addEventListener('click', function () {
+      let quizDataFromObj;
+      console.log('Ska utföra AJAX anrop');
+      console.log('1.) Inkommande data från objektet där jag tar ut resultatet!');
+      requestQuiz = new XMLHttpRequest();
+      requestQuiz.addEventListener('load', function() {
+        let incommingQuizData = JSON.parse(this.responseText);
+        quizDataFromObj = incommingQuizData['results'];
+        console.log(quizDataFromObj);
+        ajaxDataIncomming(quizDataFromObj);
+      });
+      let questionAmmount = 2;
+      requestQuiz.open('GET', 'https://opentdb.com/api.php?amount=' + questionAmmount);
+      requestQuiz.send();
+      return quizDataFromObj;
+      //})
     }
 
-      // The answer alternative. An array is created inside every turn.-------------------------------------
-    let getAnswerAltFromArr;
-    getQuizAnswerAlt(quizDataFromObj[i]);
-    function getQuizAnswerAlt (quizDataFromObj) {
-      let quizAnswerAltArr = [];
+  function ajaxDataIncomming (quizDataFromObj) {
+    console.log('Incomming values:');
+    countQuizQuestionNr = 0;
 
-      //Mergeing 2 objs strings into one array (The answer alternatives) and send it into the modell
-      let saveQuizQuestionAnswerAlt1 = quizDataFromObj['incorrect_answers'];
+    /* The length in quizDataFromObj is according the incommingQuizData
+    above and is state in urlStr */
+    for (let i = 0; i < quizDataFromObj.length; i++) {
+      /* A counter is created which count for both the question groups and
+      the answering group. The counters which is part of the question are defined above and increase by one inside every round turn.
+      I define a tabindex nr for the question starting at 10 and every 10 after it. */
+      countQuizQuestionNr += 1;
+      console.log('-----------------------------------------------------');
+      console.log('Rad 117 - Loop turn Nr: ' + countQuizQuestionNr);
+      let tabIndexNrQuestionGroup = countQuizQuestionNr + '0';
 
-      for (let i = 0; i < saveQuizQuestionAnswerAlt1.length; i++) {
-        quizAnswerAltArr.push(saveQuizQuestionAnswerAlt1[i]);
-      }
+      /* The data received from the modell and inserted into the view for rendering. ====================================
+      The questions */
 
-      let saveQuizQuestionAnswerAlt2 = quizDataFromObj['correct_answer'];
-
-      // Insert the correct answer into a objekct you can loop through to getting the correct answering string
-      correctAnswerStr[countQuizQuestionNr] = saveQuizQuestionAnswerAlt2;
-      // -----------------------------------------------------------------------------------------------------
-
-      quizAnswerAltArr.push(saveQuizQuestionAnswerAlt2);
-      modell.addQuizQuestionAnswerAlt (quizAnswerAltArr);
-      // ---------------------------------------------------------------------------------------------------
+      getQuestion(quizDataFromObj[i]);
+      console.log('Rad 124 - Questionnr ' + countQuizQuestionNr + '.)');
+      console.log(getQuestionStr);
+      // Send data into the view
       view.renderQuizContainerQuestion(tabIndexNrQuestionGroup, getQuestionStr);
 
-      /* The array with the answer alternatives are received and the array
-      with the alternatives are needed loop through */
-      let getQuestionAnswerAltArr = modell.quizQuestionAnswerAlt;
-      for (let i = 0; i < getQuestionAnswerAltArr.length; i++) {
-        getAnswerAltFromArr = getQuestionAnswerAltArr[i]['quizAnswerAltArr'];
-      }
-    }
-    // A counter for specific radioBtn in a group
-    let countRadioBtnNr = 0;
-    let getAnswerAltstr;
-    for (let i = 0; i < getAnswerAltFromArr.length; i++) {
-      countRadioBtnNr += 1;
-      // Correct answer is index = 3 but then shuffeled
-      getAnswerAltstr = getAnswerAltFromArr[i];
-      // I define tabindex for answeringAlt based the question tabindex follow by a nr 1,2,3,4 ....
-      let tabIndexNrQuestionGroupAlt = '' + countQuizQuestionNr + countRadioBtnNr;
-      view.renderQuizAnswerAlt(tabIndexNrQuestionGroupAlt, getAnswerAltstr, countQuizQuestionNr, countRadioBtnNr); // Fault????
-    }
+      // The answer alternative. An array is created inside every turn.
+      let quizAnswerAltArr = [];
+      let countRadioBtnNr = 0;
+      getAnswerAlt(quizDataFromObj[i], quizAnswerAltArr);
+      console.log('136 - AnswerAlt: ' + countQuizQuestionNr + '.)');
+      for (let getAnswerAltFromObj in getAnswerAltObj) {
+        // I define tabindex for answeringAlt based the question tabindex follow by a nr 1,2,3,4 ....
+        countRadioBtnNr += 1;
+        let tabIndexNrQuestionGroupAlt = '' + countQuizQuestionNr + countRadioBtnNr;
 
-    // Emptying the arraies
-    modell.quizQuestion.length = 0;
-    modell.quizQuestionAnswerAlt.length = 0;
+        getAnswerAltStr = getAnswerAltObj[getAnswerAltFromObj];
+        console.log(htmlDecode(getAnswerAltStr));
+        view.renderQuizAnswerAlt(tabIndexNrQuestionGroupAlt, getAnswerAltStr, countQuizQuestionNr, countRadioBtnNr); // Fault????
+        // Triggering the calc of the matching answer
+        // matchStr(saveAnswerAltLastStr);
+      }
+      console.log('Rad 150 - The correct answer?');
+
+      // Insert the correct answer into a objekct you can loop through to getting the correct answering string
+      correctAnswerStr[countQuizQuestionNr] = saveAnswerAltLastStr;
+
+      // Some functions to be running right after the main function
+    }
+    view.createSubmitBtn();
+    quizSubmit();
   }
-  // Some functions to be running right after the main function
-  view.createSubmitBtn();
-  quizSubmit(getCorrectAnswerStr);
-  view.countQuizGameTurns ();
 }
-//Submit the quiz and prevent reloading
+// ======================================== Handle Ajax´s undelaying functions ========================================
+function getQuestion (quizDataFromObj) {
+  let savedQuizQuestion = quizDataFromObj['question'];
+  modell.addQuizQuestion('Q' + countQuizQuestionNr + '. ' + savedQuizQuestion);
+
+  // Get the individual question string from modell and forwarding it into the view
+  let getQuestion = modell.quizQuestion;
+  for (let i = 0; i < getQuestion.length; i++) {
+    getQuestionStr = getQuestion[i]['savedQuizData'];
+  }
+}
+// ------------------------------------------------------------------------
+function getAnswerAlt (quizDataFromObj, quizAnswerAltArr) {
+  /* Mergeing 2 objs strings into one array (The answer alternatives) and send it into the modell.
+  The array with the incorrect answers */
+  let saveAnswerAlt = quizDataFromObj['incorrect_answers'];
+  for (let i = 0; i < saveAnswerAlt.length; i++) {
+    quizAnswerAltArr.push(saveAnswerAlt[i]);
+  }
+  // The string with the correct_answer
+  saveAnswerAltLastStr = quizDataFromObj['correct_answer'];
+  quizAnswerAltArr.push(saveAnswerAltLastStr);
+  modell.addQuizQuestionAnswerAlt(quizAnswerAltArr);
+
+  /* The array with the answer alternatives are received and the array
+  with the alternatives are needed loop through */
+  let getAnswerAltArr = modell.quizQuestionAnswerAlt;
+  for (let i = 0; i < getAnswerAltArr.length; i++) {
+    getAnswerAltObj = getAnswerAltArr[i]['quizAnswerAltArr'];
+  }
+
+  // Returning value into the head function
+  //retunedAnswerignAltArr = [saveAnswerAltLastStr, getAnswerAltStr];
+  //return retunedAnswerignAltArr;
+}
+// ====================================================================================================================
+
+
+
+//Prevent reloading of the form
 document.querySelector("#quizPage").addEventListener("submit", (event) => event.preventDefault());
-//countQuizGameTurns = 1;
-function quizSubmit (getCorrectAnswerStr) {
+
+function quizSubmit () {
   let getQuizSubmitBtn = document.querySelector('#submitQuiz');
   getQuizSubmitBtn.addEventListener('click', function() {
-    //document.querySelector('#resultModal').style.display = 'block';
-    calculateResult(getCorrectAnswerStr);
+    console.log('dsf<');
+    console.log('-----------------------------------------------------------');
+    console.log('QuizSubmited :)');
+    console.log('Rad 211 - Submit the Quiz');
+    matchStr();
+    // Sending the tot nr of correct_answer to the modal together widh the tot nr of question
 
-    document.querySelector('#modalBtnNewQuiz').addEventListener('click', function() {
-      //view.getQuizPage.textContent = ' ';
-      view.getQuizPage.scrollTop = 0;
-      //document.querySelector('#resultModal').style.display = 'none';
-      runQuizGameTurn();
-    });
-    document.querySelector('#modalBtnClose').addEventListener('click', function() {
-      location.reload();
-    });
+    document.querySelector('#resultModal').setAttribute('style', 'display: block');
   });
-
 }
-let countCorrectAnswered = 0;
-let getYourAnswerStr;
-function calculateResult (getCorrectAnswerStr) {
+modalBtns();
+function modalBtns () {
+  document.querySelector('#modalBtnNewQuiz').addEventListener('click', function() {
+    view.getQuizPage.textContent = ' ';
+    view.getQuizPage.scrollTop = 0;
+    document.querySelector('#resultModal').style.display = 'none';
+    countQuizGameTurn += 1;
+    view.countQuizGameTurns (countQuizGameTurn);
+    runQuizGameTurn();
 
+  });
+  document.querySelector('#modalBtnClose').addEventListener('click', function() {
+    location.reload();
+  });
+}
+function matchStr() {
   /* looping through my radioBtn an if checked I comparing it with my answer.
   if correct it will add 1 so I can present how many correct answered I chose */
   let getRadioBtn = document.querySelectorAll('.radioBtn');
   for (let i = 0; i < getRadioBtn.length; i++) {
+    countRadio += 1;
     let getCheckedRadioStr = getRadioBtn[i];
+
     if (getCheckedRadioStr.checked) {
       getYourAnswerStr = getCheckedRadioStr.value;
-      for (let getCorrectAnswerStr in correctAnswerStr) {
-        compareCorrectAnswerStr = correctAnswerStr[getCorrectAnswerStr];
 
-        //console.log(getYourAnswerStr + ' = ' + htmlDecode(compareCorrectAnswerStr));
-        if (getYourAnswerStr === htmlDecode(compareCorrectAnswerStr)) {
+      // Get out the correct_answer string from the object
+      for (let correctAnswerFromObj in correctAnswerStr) {
+        correctAnswerOutObj = correctAnswerStr[correctAnswerFromObj];
+
+        if (getYourAnswerStr === htmlDecode(correctAnswerOutObj)) {
           countCorrectAnswered += 1;
-
+          view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
         }
+        console.log('-----------------------------------------------------');
+        console.log('Rad 243 - Your answer: ' + getYourAnswerStr + ' = ' + ' correct answer: ' + htmlDecode(correctAnswerOutObj) + ' That gives Nr: ' + countCorrectAnswered);
       }
     }
-    // Calling the counter who is showing the tot question of the games turns
-  view.renderResultModal(countCorrectAnswered, countedQuestionTot);
   }
+  view.renderStatsPage(countCorrectAnswered, countQuizQuestionNr);
 }
-view.renderStatsPage(countQuizQuestionNr);
-
-export default {
+  export default {
   htmlDecode: htmlDecode
 }

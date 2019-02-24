@@ -124,15 +124,15 @@
   /* Modal popup ---------------------------------------- -*/
   #resultModal{
     position: relative;
-    top: 50px; /*calc(-50% - 75px);*/
+    top: calc(-50% - 75px);
     left: calc(50% - 175px);
     height: 150px;
     width: 350px;
     border: 2px solid lightgrey;
     border-radius: 20px;
     background-color: white;
-    /*box-shadow: 9px 10px 712px 222px grey;*/
-    display: block;
+    box-shadow: 9px 10px 712px 222px grey;
+    display: none;
   }
   #modalHeadLine{
     margin-top: 40px;
@@ -141,7 +141,7 @@
     margin-bottom: 10px;
   }
   #insurtQuizResult{
-    margin-left: 10px;
+    margin-left: 10px
     width: 100%;
   }
   #modalBtn{
@@ -219,7 +219,7 @@
     margin-top: -17px;
   }
   /* About page ------------------------------------------ */
-  #abotPage{
+  #aboutPage{
     display: none;
     margin-left: 10px;
     overflow-y: scroll;
