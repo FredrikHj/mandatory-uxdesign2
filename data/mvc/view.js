@@ -101,7 +101,7 @@ function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
 
   let getStatsNr4 = document.querySelector('#container__nr4');
   let percCorrect = countCorrectAnswered / (totIncorrectAnswer + countCorrectAnswered)
-  getStatsNr4.textContent = percCorrect * 10 + '%';
+  getStatsNr4.textContent = percCorrect * 100 + '%';
 }
 s
 export default {
