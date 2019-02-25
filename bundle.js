@@ -82,7 +82,12 @@ var controller = (function () {
     let insurtQuestionResult = document.querySelector('#insurtQuizResult');
     totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
     console.log('Tot' + totQuizAnswer);
-    insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
+    if (countCorrectAnswered > 0) {
+      insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
+    }
+    else {
+      insurtQuestionResult.textContent = 'Looser :) Try again!';
+    }
   }
 
   function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
@@ -348,7 +353,10 @@ var controller = (function () {
 
     });
     document.querySelector('#modalBtnClose').addEventListener('click', function() {
-      location.reload();
+    document.querySelector('#resultModal').style.display = 'none';
+    document.querySelector('#quizPage').style.display = 'none';
+    document.querySelector('#quizPlayed').style.color = 'orange';
+
     });
   }
   function matchStr() {
@@ -367,6 +375,10 @@ var controller = (function () {
 
           if (getYourAnswerStr === htmlDecode(correctAnswerOutObj)) {
             countCorrectAnswered += 1;
+            view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
+          }
+          else {
+            countCorrectAnswered += 0;
             view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
           }
           console.log('-----------------------------------------------------');

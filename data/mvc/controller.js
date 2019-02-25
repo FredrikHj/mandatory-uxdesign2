@@ -227,7 +227,10 @@ function modalBtns () {
 
   });
   document.querySelector('#modalBtnClose').addEventListener('click', function() {
-    location.reload();
+  document.querySelector('#resultModal').style.display = 'none';
+  document.querySelector('#quizPage').style.display = 'none';
+  document.querySelector('#quizPlayed').style.color = 'orange';
+
   });
 }
 function matchStr() {
@@ -247,6 +250,10 @@ function matchStr() {
 
         if (getYourAnswerStr === htmlDecode(correctAnswerOutObj)) {
           countCorrectAnswered += 1;
+          view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
+        }
+        else {
+          countCorrectAnswered += 0;
           view.renderResultModal(countCorrectAnswered, countQuizQuestionNr);
         }
         console.log('-----------------------------------------------------');

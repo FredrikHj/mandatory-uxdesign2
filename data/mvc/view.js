@@ -80,7 +80,12 @@ function renderResultModal (countCorrectAnswered, countQuizQuestionNr) {
   let insurtQuestionResult = document.querySelector('#insurtQuizResult');
   totQuizAnswer = countQuizQuestionNr * countQuizGameTurn;
   console.log('Tot' + totQuizAnswer);
-  insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
+  if (countCorrectAnswered > 0) {
+    insurtQuestionResult.textContent = 'You have answered: ' + countCorrectAnswered + '/' + totQuizAnswer + ' questions correct!';
+  }
+  else {
+    insurtQuestionResult.textContent = 'Looser :) Try again!';
+  }
 }
 
 function renderStatsPage (countCorrectAnswered, countQuizQuestionNr) {
